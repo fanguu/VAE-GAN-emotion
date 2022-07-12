@@ -11,7 +11,7 @@ from torch.utils.data import Dataset, DataLoader
 CLIP_LEN, RESIZE_HEIGHT, CROP_SIZE = 16, 128, 112
 
 
-video_transform_train = transforms.Compose([transforms.ToTensor(),
+video_transform_train = transforms.Compose([
                                       transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
                                       transforms.Resize(size=RESIZE_HEIGHT),
                                       transforms.RandomCrop(size =CROP_SIZE ),
@@ -163,16 +163,16 @@ class VideoDataset(Dataset):
         buffer = []
         for i, frame_name in enumerate(frames):
             frame = np.array(cv2.imread(frame_name))
-            test = video_transform_train(frame)
-            width, height, number = frame.shape
-            resize_height = RESIZE_HEIGHT
-            resize_width = math.floor(width / height * resize_height)
-            # make sure resize width >= crop size
-            if resize_width < CROP_SIZE:
-                resize_width = RESIZE_HEIGHT
-                resize_height = math.floor(height / width * resize_width)
-
-            frame = cv2.resize(frame, (resize_width, resize_height))
+            frame = video_transform_train(frame)
+            # width, height, number = frame.shape
+            # resize_height = RESIZE_HEIGHT
+            # resize_width = math.floor(width / height * resize_height)
+            # # make sure resize width >= crop size
+            # if resize_width < CROP_SIZE:
+            #     resize_width = RESIZE_HEIGHT
+            #     resize_height = math.floor(height / width * resize_width)
+            #
+            # frame = cv2.resize(frame, (resize_width, resize_height))
             buffer.append(frame)
 
         return np.array(buffer).astype(np.uint8)
